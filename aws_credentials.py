@@ -1,4 +1,4 @@
 region_name = 'us-east-1'
-aws_access_key_id = 'ASIAX2HUMQLK26GGL3DF'
-aws_secret_access_key = 'YxQ6Rlf+pjUd7witl5b1RFVlmzIOgLj2E7mSGl5e'
-aws_session_token = 'FwoGZXIvYXdzEGIaDOpI+pIf7WG7ugSk0SLNAWoD0U59tq5VvJz8M5LbtzkdKYBxvHvi4LjlNFWhn5Bah1tXLSSu4zLxJENx4EhG6tMFtYFUWZVh8PZ6jMXCm/UrhTjB4HJ3Yj842vCdnb1u9ZS2PhncD4PTsSIkfd4XfEqOv+Ew+/uLfWcKZ8qYA/g0DYfCSWuV3Eio+apWIKZ7hAGKfDwKjgZDT9gn3JPlK5LUtsmmnlkMJm4x2Qt9pe12tcjTElYnJaUHxWtvo8+AvBpVggPmFVqj6jGPfsrzDjPES4aM4qVtOEc0dBooyd+A/QUyLTgzCLi4Sj69KQwgQifG79f9uFyQ3gf4d6JLLMk0agPEntwIHsdQ6rSaagj6GA=='
+aws_access_key_id = '***'
+aws_secret_access_key = '***'
+aws_session_token = '***'
