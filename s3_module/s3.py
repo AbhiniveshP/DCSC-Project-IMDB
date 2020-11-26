@@ -46,15 +46,17 @@ class S3:
 
     def get_all_objects(self, bucket_name='dcsc2020-imdb'):
 
+        result = []
+
         try:
             for resp in self.s3_client.list_objects(Bucket=bucket_name)['Contents']:
                 key_name = resp['Key']
-                print(self.get_object(key_name))
+                result.append(self.get_object(key_name))
 
         except:
             pass
 
-        return
+        return result
 
     def get_object(self, key_name, bucket_name='dcsc2020-imdb'):
 
@@ -68,8 +70,8 @@ class S3:
 
         try:
             self.s3_client.upload_file(Filename=file_path,
-                                   Bucket=bucket_name,
-                                   Key=os.path.basename(file_path))
+                                       Bucket=bucket_name,
+                                       Key=os.path.basename(file_path))
 
         except:
             pass
