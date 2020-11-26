@@ -1,6 +1,7 @@
 import json, csv, codecs
 from s3_module.s3 import S3
 from sqs_module.sqs import SQS
+from dynamodb_module.dynamodb import DynamoDB
 
 def lambda_handler(event, context):
     # TODO implement
