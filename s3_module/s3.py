@@ -12,6 +12,7 @@ class S3:
                                       aws_secret_access_key=aws_secret_access_key,
                                       aws_session_token=aws_session_token)
 
+    def create_bucket(self, bucket_name='dcsc2020-imdb'):
         self.s3_client.create_bucket(Bucket=bucket_name)
 
     def delete_all_objects(self, bucket_name='dcsc2020-imdb'):
