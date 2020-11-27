@@ -5,11 +5,11 @@ import os, json
 def main():
     s3 = S3()
     sqs = SQS()
-    file_path = os.path.join('data', 'json_files', 'title_akas_tt0000001.json')
+    file_path = os.path.join('data', 'json_files', 'name_basics_nm0000001.json')
     json_folder = os.path.join('data', 'json_files')
     fobj = open(file_path)
 
-    data = json.load(fobj)
+    # s3.upload_file(file_path)
 
     for file in os.listdir(json_folder):
         file_path = os.path.join(json_folder, file)
