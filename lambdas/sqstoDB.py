@@ -1,7 +1,6 @@
 import json, csv, codecs
 from s3_module.s3 import S3
 from sqs_module.sqs import SQS
-from dynamodb_module.dynamodb import DynamoDB
 
 def lambda_handler(event, context):
     # TODO implement
@@ -11,6 +10,7 @@ def lambda_handler(event, context):
     
     key_name = event['Records'][0]['s3']['object']['key']
     
+    print(key_name)
     data = s3.get_object(key_name)['Body'].read().decode('utf-8')
     json_data = json.loads(data)
     
@@ -19,5 +19,5 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        'body': json.dumps('Success')
+        'body': json.dumps('Hello World')
     }
