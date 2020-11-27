@@ -1,2 +1,9 @@
 aws_credentials.py
 data
+.DS_Store
+.idea/
+__pycache__/
+dynamodb_module/__pycache__/
+s3_module/.DS_Store
+s3_module/__pycache__/s3.cpython-36.pyc
+sqs_module/__pycache__/

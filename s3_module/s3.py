@@ -88,3 +88,31 @@ class S3:
             pass
 
         return
+
+    def upload_file_public(self, file_path, bucket_name='dcsc2020-imdb'):
+
+        try:
+            self.s3_client.upload_file(Filename=file_path,
+                                       Bucket=bucket_name,
+                                       Key=os.path.basename(file_path),
+                                       ExtraArgs= {'ACL': 'public-read'})
+
+        except:
+            pass
+
+        return
+
+    def upload_html_public(self, file_path, bucket_name='dcsc2020-imdb'):
+
+        try:
+            self.s3_client.upload_file(Filename=file_path,
+                                       Bucket=bucket_name,
+                                       Key=os.path.basename(file_path),
+                                       ExtraArgs= {
+                                           'ContentType': 'text/html',
+                                           'ACL': 'public-read'})
+
+        except:
+            pass
+
+        return
