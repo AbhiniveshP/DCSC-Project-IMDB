@@ -1,23 +1,33 @@
 import json, csv, codecs
-from s3_module.s3 import S3
 from sqs_module.sqs import SQS
+from dynamodb_module.dynamodb import DynamoDB
+from decimal import Decimal
 
 def lambda_handler(event, context):
     # TODO implement
     
-    s3 = S3()
     sqs = SQS()
+    dynamodb = DynamoDB()
     
-    key_name = event['Records'][0]['s3']['object']['key']
+    queue_name = event['Records'][0]['eventSourceARN'].split(":")[-1]
     
-    print(key_name)
-    data = s3.get_object(key_name)['Body'].read().decode('utf-8')
-    json_data = json.loads(data)
+    print("queue_name: {}".format(queue_name))
     
-    queue_name = json_data['table_name']
-    sqs.send_message(queue_name, json_data)
+    print("event: {}".format(event))
+    
+    # message, receipt_handle = sqs.receive_message(queue_name)
+    
+    message = event['Records'][0]['body']
+    receipt_handle = event['Records'][0]['receiptHandle']
+    print("mb:", message)
+    
+    sqs.delete_message(queue_name, receipt_handle)
+    
+    data = json.loads(message, parse_float=Decimal)
+    
+    dynamodb.put_item(table_name=queue_name, data=data)
     
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello World')
+        'body': json.dumps('Success')
     }
