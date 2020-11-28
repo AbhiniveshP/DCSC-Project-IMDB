@@ -3,7 +3,8 @@ import os
 import json
 import pandas as pd
 from aws_credentials import *
-
+from dynamodb_module.reserved import reserved_keywords
+import uuid
 
 class DynamoDB:
 
@@ -18,15 +19,26 @@ class DynamoDB:
                                            aws_secret_access_key=aws_secret_access_key,
                                            aws_session_token=aws_session_token)
 
-        self.existing_tables = self.ddb_client.list_tables()['TableNames']
+        self.primary_key = {'name_basics': 'nconst',
+                            'title_akas': 'titleId',
+                            'title_basics': 'tconst',
+                            'title_crew': 'tconst',
+                            'title_episode': 'tconst',
+                            'title_principals': 'tconst',
+                            'title_ratings': 'tconst'}
+
+        # self.existing_tables = self.ddb_client.list_tables()['TableNames']
 
     def check_if_table_exists(self, table_name):
-        return table_name in self.existing_tables
+        return table_name in self.primary_key
 
     def put_item(self, table_name, data):
         try:
             if not self.check_if_table_exists(table_name):
                 raise Exception("Table {} does not exist".format(table_name))
+
+            if self.primary_key[table_name] not in data:
+                raise Exception("Payload is missing primary key: {}\n{}".format(self.primary_key[table_name], data))
 
             table = self.ddb_resource.Table(table_name)
             data.pop('table_name')
@@ -37,24 +49,77 @@ class DynamoDB:
             print(e)
             raise
 
-    def get_item(self, table_name, key):
+    def update_item(self, table_name, data):
+        def get_update_params(body):
+            def get_random_string():
+                new_key = "#{}".format(str(uuid.uuid4()))
+                new_key = "".join([c for c in new_key if not c.isdigit() and c != '-'])
+                return new_key
 
+            update_expression = ["set "]
+            update_values = dict()
+            update_names = dict()
+
+            for key, val in body.items():
+                if key in reserved_keywords:
+                    new_key = get_random_string()
+                    update_names[new_key] = key
+                    update_expression.append(f"{new_key} = :{new_key[1:]},")
+                    update_values[f":{new_key[1:]}"] = val
+                else:
+                    update_expression.append(f"{key} = :{key},")
+                    update_values[f":{key}"] = val
+
+            return "".join(update_expression)[:-1], update_values, update_names
+
+        try:
+            if not self.check_if_table_exists(table_name):
+                raise Exception("Table {} does not exist".format(table_name))
+
+            if self.primary_key[table_name] not in data:
+                raise Exception("Payload is missing primary key: {}\n{}".format(self.primary_key[table_name], data))
+
+            key = data[self.primary_key[table_name]]
+
+            table = self.ddb_resource.Table(table_name)
+            data.pop('table_name')
+            data.pop(self.primary_key[table_name])
+            update_expr, expr_attrs, expr_names = get_update_params(data)
+            if expr_names:
+                response = table.update_item(
+                    Key={self.primary_key[table_name]: key}, UpdateExpression=update_expr, 
+                    ExpressionAttributeValues=expr_attrs, ExpressionAttributeNames=expr_names, ReturnValues="UPDATED_NEW"
+                )
+            else:
+                response = table.update_item(
+                    Key={self.primary_key[table_name]: key}, UpdateExpression=update_expr, 
+                    ExpressionAttributeValues=expr_attrs, ReturnValues="UPDATED_NEW"
+                )
+            return response
+        except Exception as e:
+            print(e)
+            raise
+
+    def get_item(self, table_name, key):
         try:
             response = self.ddb_client.get_item(TableName=table_name, Key=key)
             return response['Item']
 
         except Exception as e:
-            return {}
+            print(e)
+            raise
 
     def delete_item(self, table_name, key):
         try:
             if not self.check_if_table_exists(table_name):
                 raise Exception("Table {} does not exist".format(table_name))
 
-            # table = self.ddb_client.Table(table_name)
+            if self.primary_key[table_name] not in key:
+                raise Exception("Key is missing primary key: {}\n{}".format(self.primary_key[table_name], key))
 
             try:
-                response = self.ddb_client.delete_item(TableName=table_name, Key=key)
+                table = self.ddb_resource.Table(table_name)
+                response = table.delete_item(Key=key)
             except Exception as e:
                 print(e)
             else:
