@@ -1,0 +1,9 @@
+{
+	"es_url": "http://localhost",
+	"es_port": 9200,
+	"es_titles_index" : "titles",
+	"es_people_index" : "people",
+	"es_request_headers": {
+		"Content-Type": "application/json"
+	}
+}
