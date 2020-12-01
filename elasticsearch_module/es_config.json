@@ -1,5 +1,5 @@
 {
-	"es_url": "http://localhost",
+	"es_url": "http://34.193.101.103",
 	"es_port": 9200,
 	"es_titles_index" : "titles",
 	"es_people_index" : "people",
