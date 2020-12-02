@@ -58,9 +58,10 @@ def csv_to_json_full(csv_path, json_file_path, id_name):
         for rows in csv_reader:
 
             data[id_name] = rows
+            # ddb.put_item(table_name, rows)
             es.update_titles_doc(table_name, rows, rows[id_name])
             count += 1
-            if (count % 25 == 0):
+            if (count % 50 == 0):
                 print(count, ' ...Completed')
 
     # with open(json_file_path, 'w') as jsonfile:
@@ -68,7 +69,7 @@ def csv_to_json_full(csv_path, json_file_path, id_name):
 
     return
 
-csv_folder_path = os.path.join('../data', 'latest-tsvs')
+csv_folder_path = os.path.join('../data', 'modified-tsvs')
 json_folder_path = os.path.join('../data', 'json_files')
 
 csv_path = os.path.join(csv_folder_path, 'title.akas.tsv')
