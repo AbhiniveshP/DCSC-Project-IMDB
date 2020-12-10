@@ -71,6 +71,12 @@ IMDB data doesn’t provide an official documented API. The main goal of our pro
  - Services involving container architecture (Docker & K8s).
 
 
+<b><u> Video Links (YouTube): </u></b>
+
+ - [CSCI 5253 - DCSC - Final Project and Architecture Explanation](https://youtu.be/0vnMpP12JjI)
+ - [CSCI 5253 - DCSC - Final Project Working and Implementation](https://youtu.be/Xsc3MkKaUYk)
+
+
 <b><u> References: </u></b>
 
 [1] https://datasets.imdbws.com/
